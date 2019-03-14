@@ -1,0 +1,27 @@
+{
+  "name": "inventory",
+  "version": "0.1.0",
+  "description": "Home inventory management software",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "express": "^4.16.4",
+    "express-react-views": "^0.11.0",
+    "express-validator": "^5.3.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.4.13",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0",
+    "nodemon": "^1.18.10"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "devstart": "set DEBUG=express:* & nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
