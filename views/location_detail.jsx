@@ -6,8 +6,9 @@ class LocationDetail extends React.Component {
     let location = this.props.location;
     let location_locations = this.props.location_locations;
     let location_things = this.props.location_things;
+
     return (
-      <DefaultLayout>
+      <DefaultLayout js={this.props.js}>
         <h1>{location.name}</h1>
 
         <div>
@@ -37,6 +38,8 @@ class LocationDetail extends React.Component {
             <p>This location doesn't contain any things.</p>
           )}
         </div>
+
+        <img src={this.props.qrdata}/>
       </DefaultLayout>
     )
   }

@@ -4,6 +4,7 @@ const Location = require(path.join(__dirname, "..\\models\\locations"));
 const Thing = require(path.join(__dirname, "..\\models\\things"));
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const qrcode = require('qrcode');
 
 exports.list = (req, res, next) => {
   Location.find().sort([['type', 'ascending']]).exec((err, list_locations) => {
@@ -25,7 +26,14 @@ exports.detail = (req, res, next) => {
       err.status(404);
       return next(err);
     } else {
-      res.render('location_detail', {location: results.location, location_locations: results.location.locations, location_things: results.location.things});
+      let qrcodetext = results.location.qrcode;
+      qrcode.toDataURL(qrcodetext, {errorCorrectionLevel: 'H'})
+        .then(url => {
+          res.render('location_detail', {location: results.location, location_locations: results.location.locations,
+            location_things: results.location.things, qrdata: url});
+        }).catch(err => {
+          console.error(err)
+        });
     }
   }
   ).catch(err =>

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const qrcode = require('qrcode');
 
 // Define location schema
 let LocationSchema = new Schema({
@@ -20,12 +19,7 @@ LocationSchema.virtual('url').get(function() {
 
 // Generate QR code
 LocationSchema.virtual('qrcode').get(function() {
-  let urlqr;
-  qrcode.toDataURL(this._id.toString(), (err, url) => {
-    if (err) throw err
-    urlqr = url;
-  })
-  return urlqr;
+  return this._id.toString()
 })
 
 module.exports = mongoose.model('Location', LocationSchema);
