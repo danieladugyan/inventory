@@ -17,7 +17,7 @@ class DefaultLayout extends React.Component {
         <body>
           {/* Navbar */}
           <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-            <a className="navbar-brand"><img src="/images/logo.png" height="30"/></a>
+            <i className="fas fa-warehouse navbar-brand" height="30"></i>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router()
 const path = require('path');
 
-const index_controller = require(path.join(__dirname, "..\\controllers\\indexController"));
 const location_controller = require(path.join(__dirname, "..\\controllers\\locationController"));
 const user_controller = require(path.join(__dirname, "..\\controllers\\userController"));
 const thing_controller = require(path.join(__dirname, "..\\controllers\\thingController"));

@@ -37,5 +37,5 @@ mongoose.connect(database, {
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB conection error: '));
 mongoose.set('useCreateIndex', true)
 
-const IndexRouter = require(__dirname + '/routes/index');
-app.use('/', IndexRouter);
+const Routes = require(__dirname + '/routes/routes');
+app.use('/', Routes);
