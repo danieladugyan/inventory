@@ -24,29 +24,22 @@ class DefaultLayout extends React.Component {
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div className="navbar-nav mr-auto">
                 <a className="nav-item nav-link active" href="/">Home</a>
+                <a className="nav-item nav-link" href="/locations">Locations</a>
+                <a className="nav-item nav-link" href="/things">Things</a>
                 <li className="nav-item dropdown">
-                  <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Apps</a>
+                  <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
                   <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a className="dropdown-item" href="/apps">All apps</a>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="https://www.mapveto.com">CS:GO Map Veto</a>
-                    <a className="dropdown-item" href="https://www.gymnasietips.com">Gymnasieval</a>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="/apps/flashread">Flashread</a>
-                    <a className="dropdown-item" href="/apps/lifecal">Lifecal</a>
-                    <a className="dropdown-item" href="/apps/locallibrary">Local Library</a>
-                    <a className="dropdown-item" href="/apps/csgoskins">CS:GO Skins</a>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="/apps/react">React Native</a>
+                    <a className="dropdown-item" href="https://www.mapveto.com">Location 1</a>
+                    <a className="dropdown-item" href="https://www.gymnasietips.com">Location 2</a>
                   </div>
                 </li>
-                <a className="nav-item nav-link disabled" href="blog" tabIndex="-1" aria-disabled="true">Blog</a>
               </div>
               <form className="form-inline">
                 <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
                 <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
               </form>
             </div>
+            <a className="btn btn-outline-success my-2 my-sm-0" href="/login">Sign in</a>
           </nav>
 
           {/* Page content */}

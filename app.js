@@ -38,6 +38,4 @@ mongoose.connection.on('error', console.error.bind(console, 'MongoDB conection e
 mongoose.set('useCreateIndex', true)
 
 const IndexRouter = require(__dirname + '/routes/index');
-const ObjectsRouter = require(__dirname + '/routes/objects');
 app.use('/', IndexRouter);
-app.use('/Users/', ObjectsRouter);

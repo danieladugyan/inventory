@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define location schema
-let ObjectSchema = new Schema({
+let ThingSchema = new Schema({
   name: {type: String, required: true},
   image: {data: Buffer, contentType: String},
   warranty: Date,
@@ -11,9 +11,19 @@ let ObjectSchema = new Schema({
   notes: String
 })
 
-// Generate QR code
-/*ObjectSchema.virtual('qrcode').get(() => {
-  return "somekindofqrcodegenerator"
-})*/
+// Location detail link
+ThingSchema.virtual('url').get(function() {
+  return 'location/' + this._id
+})
 
-module.exports = mongoose.model('Object', ObjectSchema);
+// Generate QR code
+ThingSchema.virtual('qrcode').get(function() {
+  let urlqr;
+  qrcode.toDataURL(this._id, (err, url) => {
+    if (err) throw err
+    urlqr = url;
+  })
+  return urlqr;
+})
+
+module.exports = mongoose.model('Thing', ThingSchema);
