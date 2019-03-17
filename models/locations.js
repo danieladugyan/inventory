@@ -10,7 +10,7 @@ let LocationSchema = new Schema({
   things: [{type: Schema.Types.ObjectId, ref: 'Thing'}]
 })
 
-LocationSchema.set('toObject', { getters: true, virtuals: true })
+//LocationSchema.set('toObject', { getters: true, virtuals: true }) USED FOR DEBUGGING IN CONSOLE
 
 // Location detail link
 LocationSchema.virtual('url').get(function() {

@@ -8,6 +8,7 @@ class LocationList extends React.Component {
     return (
       <DefaultLayout>
         <h1>{title}</h1>
+        <h3><a href="/location/create">Add location</a></h3>
         <ul>
           {location_list ? (location_list.map((location) =>
             <li key={location}><a href={location.url}>{location.name}</a></li>

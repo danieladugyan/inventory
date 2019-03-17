@@ -5,25 +5,22 @@ const Schema = mongoose.Schema;
 let ThingSchema = new Schema({
   name: {type: String, required: true},
   image: {data: Buffer, contentType: String},
-  warranty: Date,
+  date_of_purchase: Date,
   price: Number,
-  lended: Boolean,
+  warranty_expires: Date,
+  lended: {type: Boolean, default: false},
+  receipt: String,
   notes: String
 })
 
 // Location detail link
 ThingSchema.virtual('url').get(function() {
-  return 'location/' + this._id
+  return 'thing/' + this._id
 })
 
 // Generate QR code
 ThingSchema.virtual('qrcode').get(function() {
-  let urlqr;
-  qrcode.toDataURL(this._id, (err, url) => {
-    if (err) throw err
-    urlqr = url;
-  })
-  return urlqr;
+  return this._id.toString()
 })
 
 module.exports = mongoose.model('Thing', ThingSchema);

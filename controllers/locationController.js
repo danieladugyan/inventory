@@ -14,16 +14,15 @@ exports.list = (req, res, next) => {
 }
 
 exports.detail = (req, res, next) => {
-  let queries = ["location", "things"]
+  let queries = ["location"]
   Promise.all([
-    () => Location.findById(req.params.id).exec(),
-    () => Thing.find({'location': req.params.id}, 'name notes').exec()
+    () => Location.findById(req.params.id).exec()
   ].map(f => f())
   ).then(results => {
     results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
     if (results.location == null) {
       let err = new Error('Location not found');
-      err.status(404);
+      err.status = 404;
       return next(err);
     } else {
       let qrcodetext = results.location.qrcode;
@@ -48,7 +47,7 @@ exports.create_get = (req, res, next) => {
 exports.create_post = [
   // Validate fields.
   body('name').isLength({ min: 1 }).trim().withMessage('Name must be specified.')
-    .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    .isAlphanumeric().withMessage('Name has non-alphanumeric characters.'),
   body('type').isLength({ min: 1 }).trim().withMessage('Type must be specified.')
     .isAlphanumeric().withMessage('Type has non-alphanumeric characters.'),
 
@@ -60,6 +59,7 @@ exports.create_post = [
   // Process request after validation and sanitization
   (req, res, next) => {
     const errors = validationResult(req);
+    console.log(errors)
     if (!errors.isEmpty()) {
       // Handle errors
       res.render('location_form', {title: "Create Location", location: req.body, errors: errors.array()});
@@ -74,7 +74,7 @@ exports.create_post = [
         });
       location.save((err) => {
         if (err) {return next(err)}
-        res.redirect("/")
+        res.redirect("/locations")
       })
     }
   }

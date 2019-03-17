@@ -9,7 +9,8 @@ class LocationDetail extends React.Component {
 
     return (
       <DefaultLayout js={this.props.js}>
-        <h1>{location.name}</h1>
+        <h1>{location.name} | {location.type}</h1>
+        <p>Description: {location.desc}</p>
 
         <div>
           <h4>Locations</h4>

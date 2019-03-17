@@ -18,7 +18,7 @@ class LocationForm extends React.Component {
           </div>
           <div className='form-group'>
             <label htmlFor="desc">Description:</label>
-            <input id="desc" name="desc" className="form-control" type="desc" placeholder="Description" defaultValue={undefined === location ? '' : location.desc}></input>
+            <input id="desc" name="desc" className="form-control" type="text" placeholder="Description" defaultValue={undefined === location ? '' : location.desc}></input>
           </div>
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
