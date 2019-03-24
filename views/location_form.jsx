@@ -4,16 +4,18 @@ const DefaultLayout = require('./layouts/default');
 class LocationForm extends React.Component {
   render() {
     let location = this.props.location;
-    let allthings = this.props.allthings;
+    let things_list = this.props.things_list;
     let things = [];
-    if (location.things) {
-      if (typeof location.things === 'string') {
-        things.push(location.things._id)
-      } else {
-        // if more than one thing (prevents forEach from throwing error for < 2 things)
-        location.things.forEach(thing => {
-          things.push(thing._id)
-        })
+    if (location) {
+      if (location.things) {
+        if (typeof location.things === 'string') {
+          things.push(location.things._id)
+        } else {
+          // if more than one thing (prevents forEach from throwing error for < 2 things)
+          location.things.forEach(thing => {
+            things.push(thing._id)
+          })
+        }
       }
     }
     let errors = this.props.errors;
@@ -41,7 +43,7 @@ class LocationForm extends React.Component {
           </div>
           <label htmlFor="things">Things:</label><br/>
           <select className="selectpicker" id="things" name="things" data-live-search="true" placeholder="" multiple defaultValue={things}>
-            {allthings ? (allthings.map((thing) =>
+            {things_list ? (things_list.map((thing) =>
               <option key={thing} value={thing._id}>{thing.name}</option>
             )) : (
               ""

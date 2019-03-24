@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router()
 const path = require('path');
 
-const location_controller = require(path.join(__dirname, "..\\controllers\\locationController"));
-const user_controller = require(path.join(__dirname, "..\\controllers\\userController"));
-const thing_controller = require(path.join(__dirname, "..\\controllers\\thingController"));
+const location_controller = require("../controllers/locationController");
+const user_controller = require("../controllers/userController");
+const thing_controller = require("../controllers/thingController");
 
 // GET home page.
 router.get('/', (req, res) => {

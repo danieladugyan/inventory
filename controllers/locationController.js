@@ -1,53 +1,43 @@
-const path = require('path');
-
-const Location = require(path.join(__dirname, "..\\models\\locations"));
-const Thing = require(path.join(__dirname, "..\\models\\things"));
+const Location = require("../models/locations");
+const Thing = require("../models/things");
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
 
-exports.list = (req, res, next) => {
-  Location.find().sort([['type', 'ascending']]).exec((err, list_locations) => {
-    if (err) {return next(err)}
-    res.render('location_list', {title: 'Location List', location_list: list_locations})
-  })
+exports.list = async (req, res) => {
+  try {
+    let list_locations = await Location.find().sort([['type', 'ascending']]).exec();
+    res.render('location_list', {title: 'Location List', location_list: list_locations});
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send();
+  }
 }
 
-exports.detail = (req, res, next) => {
-  Location.findById(req.params.id).populate("things").exec()
-  .then(location => {
+exports.detail = async (req, res) => {
+  try {
+    let location = await Location.findById(req.params.id).populate("things").exec();
     if (location == null) {
-      let err = new Error('Location not found');
-      err.status = 404;
-      return next(err);
+      res.status(404).send('Location not found!');
     } else {
-      // Generate QR Code
-      qrcode.toDataURL(location.qrcode, {errorCorrectionLevel: 'H'})
-      .then(imgdata => {
-        res.render('location_detail', {location: location, location_locations: location.locations,
-                                       location_things: location.things, qrdata: imgdata});
-      }).catch(err => {
-        console.error(err)
-      });
+      let imgdata = await qrcode.toDataURL(location.qrcode, {errorCorrectionLevel: 'H'});
+      res.render('location_detail', {location: location, location_locations: location.locations,
+                                     location_things: location.things, qrdata: imgdata});
     }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send();
   }
-  ).catch(err =>
-    next(err) // Error in API usage
-  )
-};
+}
 
-exports.create_get = (req, res, next) => {
-  let queries = ["things", "location"]
-  Promise.all([
-    () => Thing.find({}).exec(),
-    () => Location.find({}).exec()
-  ].map(f => f())
-  ).then(results => {
-    results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
-    res.render('location_form', {title: 'Create Location', allthings: results.things, location: results.location})
-  }).catch(err =>
-    next(err) // Error in API usage
-  )
+exports.create_get = async (req, res) => {
+  try {
+    let things_list = await Thing.find({}).exec();
+    res.render('location_form', {title: 'Create Location', things_list: things_list})
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send();
+  }
 }
 
 exports.create_post = [
@@ -61,59 +51,43 @@ exports.create_post = [
   sanitizeBody('desc').trim().escape(),
 
   // Process request after validation and sanitization
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // Handle errors
-      res.render('location_form', {title: "Create Location", location: req.body, errors: errors.array()});
-      return;
-    } else {
-      // If there are no errors:
-      let queries = []
-      if (req.body.things) {
-        if (typeof req.body.things === 'string') {
-          // if only one thing in location
-          queries.push(Thing.findById(req.body.things).exec())
-        } else {
-          // if more than one thing (prevents map from throwing error for < 2 things)
-          req.body.things.map(thing => {
-            queries.push(Thing.findById(thing).exec())
-          })
-        }
-      }
-
-      Promise.all(queries).then(results => {
-        let resultids = [];
-        results.forEach(result => resultids.push(result._id))
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        // Handle errors
+        let things_list = await Thing.find({}).exec();
+        console.log(things_list);
+        res.render('location_form', {title: "Create Location", location: req.body, things_list: things_list, errors: errors.array()});
+      } else {
+        // If there are no errors:
         let location = new Location(
           {
             name: req.body.name,
             type: req.body.type,
             desc: req.body.desc,
-            things: resultids
+            things: req.body.things
           });
-          location.save((err, location) => {
-            if (err) {return next(err)}
-            res.redirect("/locations")
-          })
-      }).catch(err => {
-        next(err) // Error in API usage
-      })
+          await location.save();
+          res.redirect("/locations")
+      }
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send();
     }
   }
 ]
 
-exports.update_get = (req, res, next) => {
-  let queries = ["location", "things"]
-  Promise.all([
-    () => Location.findById(req.params.id).populate('things').exec(),
-    () => Thing.find({}).exec()
-  ].map(f => f())
-  ).then(results => {
-    results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
-    res.render('location_form', {title: 'Create Location', allthings: results.things, location: results.location})
-  }).catch(err => next(err))
-};
+exports.update_get = async (req, res) => {
+  try {
+    let location = await Location.findById(req.params.id).populate('things').exec();
+    let things_list = await Thing.find({}).exec();
+    res.render('location_form', {title: 'Update Location', things_list: things_list, location: location});
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send();
+  }
+}
 
 exports.update_post = [
   // Validate fields.
@@ -126,46 +100,31 @@ exports.update_post = [
   sanitizeBody('desc').trim().escape(),
 
   // Process request after validation and sanitization
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // Handle errors
-      res.render('location_form', {title: "Create Location", location: req.body, errors: errors.array()});
-      return;
-    } else {
-      // If there are no errors:
-      let queries = []
-      if (req.body.things) {
-        if (typeof req.body.things === 'string') {
-          // if only one thing in location
-          queries.push(Thing.findById(req.body.things).exec())
-        } else {
-          // if more than one thing (prevents map from throwing error for < 2 things)
-          req.body.things.map(thing => {
-            queries.push(Thing.findById(thing).exec())
-          })
-        }
-      }
-
-      Promise.all(queries).then(results => {
-        let resultids = [];
-        results.forEach(result => resultids.push(result._id))
-        Location.updateOne({_id: req.params.id},
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        // Handle errors
+        let things_list = await Thing.find({}).exec();
+        console.log(things_list);
+        res.render('location_form', {title: "Create Location", location: req.body, things_list: things_list, errors: errors.array()});
+      } else {
+        // If there are no errors:
+        await Location.updateOne({_id: req.params.id},
           {
             name: req.body.name,
             type: req.body.type,
             desc: req.body.desc,
-            things: resultids
-          }, (err) => {
-            if (err) {return next(err)}
-            res.redirect("/locations")
+            things: req.body.things
           });
-      }).catch(err => {
-        next(err) // Error in API usage
-      })
+        res.redirect('/locations');
+      }
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send();
     }
   }
-];
+]
 
 exports.update_delete = (req, res, next) => {
 
