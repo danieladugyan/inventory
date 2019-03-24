@@ -37,14 +37,14 @@ exports.detail = (req, res, next) => {
 };
 
 exports.create_get = (req, res, next) => {
-  let queries = ["things", "locations"]
+  let queries = ["things", "location"]
   Promise.all([
     () => Thing.find({}).exec(),
     () => Location.find({}).exec()
   ].map(f => f())
   ).then(results => {
     results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
-    res.render('location_form', {title: 'Create Location', things: results.things, locations: results.locations})
+    res.render('location_form', {title: 'Create Location', allthings: results.things, location: results.location})
   }).catch(err =>
     next(err) // Error in API usage
   )
@@ -72,10 +72,12 @@ exports.create_post = [
       let queries = []
       if (req.body.things) {
         if (typeof req.body.things === 'string') {
-          queries.push(Thing.findOne({'name':req.body.things}).exec())
+          // if only one thing in location
+          queries.push(Thing.findById(req.body.things).exec())
         } else {
+          // if more than one thing (prevents map from throwing error for < 2 things)
           req.body.things.map(thing => {
-            queries.push(Thing.findOne({'name':thing}).exec())
+            queries.push(Thing.findById(thing).exec())
           })
         }
       }
@@ -102,12 +104,68 @@ exports.create_post = [
 ]
 
 exports.update_get = (req, res, next) => {
-
+  let queries = ["location", "things"]
+  Promise.all([
+    () => Location.findById(req.params.id).populate('things').exec(),
+    () => Thing.find({}).exec()
+  ].map(f => f())
+  ).then(results => {
+    results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
+    res.render('location_form', {title: 'Create Location', allthings: results.things, location: results.location})
+  }).catch(err => next(err))
 };
 
-exports.update_post = (req, res, next) => {
+exports.update_post = [
+  // Validate fields.
+  body('name').isLength({ min: 1 }).trim().withMessage('Name must be specified.'),
+  body('type').isLength({ min: 1 }).trim().withMessage('Type must be specified.'),
 
-};
+  // Sanitize fields
+  sanitizeBody('name').trim().escape(),
+  sanitizeBody('type').trim().escape(),
+  sanitizeBody('desc').trim().escape(),
+
+  // Process request after validation and sanitization
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // Handle errors
+      res.render('location_form', {title: "Create Location", location: req.body, errors: errors.array()});
+      return;
+    } else {
+      // If there are no errors:
+      let queries = []
+      if (req.body.things) {
+        if (typeof req.body.things === 'string') {
+          // if only one thing in location
+          queries.push(Thing.findById(req.body.things).exec())
+        } else {
+          // if more than one thing (prevents map from throwing error for < 2 things)
+          req.body.things.map(thing => {
+            queries.push(Thing.findById(thing).exec())
+          })
+        }
+      }
+
+      Promise.all(queries).then(results => {
+        let resultids = [];
+        results.forEach(result => resultids.push(result._id))
+        Location.updateOne({_id: req.params.id},
+          {
+            name: req.body.name,
+            type: req.body.type,
+            desc: req.body.desc,
+            things: resultids
+          }, (err) => {
+            if (err) {return next(err)}
+            res.redirect("/locations")
+          });
+      }).catch(err => {
+        next(err) // Error in API usage
+      })
+    }
+  }
+];
 
 exports.update_delete = (req, res, next) => {
 

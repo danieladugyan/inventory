@@ -19,10 +19,12 @@ router.post('/user/create', user_controller.create_post)
 router.get('/users', user_controller.list)
 
 // Location routes
-router.get('/location/create', location_controller.create_get)
-router.post('/location/create', location_controller.create_post)
-router.get('/location/:id', location_controller.detail)
-router.get('/locations', location_controller.list)
+router.get('/location/create', location_controller.create_get) // create GET
+router.post('/location/create', location_controller.create_post) // create POST
+router.get('/location/:id/update', location_controller.update_get) // update GET
+router.post('/location/:id/update', location_controller.update_post) // update POST
+router.get('/location/:id', location_controller.detail) // detail GET
+router.get('/locations', location_controller.list) // list GET
 
 // Thing routes
 

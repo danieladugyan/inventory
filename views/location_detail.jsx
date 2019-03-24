@@ -11,6 +11,7 @@ class LocationDetail extends React.Component {
       <DefaultLayout js={this.props.js}>
         <h1>{location.name} | {location.type}</h1>
         <p>Description: {location.desc}</p>
+        <a href={location._id + '/update/'}><button type="button" className="btn btn-success btn-lg">Edit</button></a>
 
         <div>
           <h4>Locations</h4>
