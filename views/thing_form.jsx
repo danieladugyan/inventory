@@ -24,6 +24,7 @@ class ThingForm extends React.Component {
             <label htmlFor="price">Price:</label>
             <input id="price" name="price" className="form-control" type="number" placeholder="Price" defaultValue={undefined === thing ? '' : thing.price}></input>
           </div>
+          {/* add input to choose which location thing belongs to*/}
           <div className='form-group'>
             <label htmlFor="date_of_purchase">Date of purchase:</label>
             <input id="date_of_purchase" name="date_of_purchase" className="form-control" type="date" defaultValue={undefined === thing ? '' : thing.date_of_purchase}></input>
@@ -42,6 +43,7 @@ class ThingForm extends React.Component {
           </div>
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
+
       </DefaultLayout>
     )
   }

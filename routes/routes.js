@@ -25,9 +25,12 @@ router.get('/location/:id', location_controller.detail)
 router.get('/locations', location_controller.list)
 
 // Thing routes
-router.get('/thing/create', thing_controller.create_get)
-router.post('/thing/create', thing_controller.create_post)
-router.get('/thing/:id', thing_controller.detail)
-router.get('/things', thing_controller.list)
+
+router.get('/thing/create', thing_controller.create_get) // create GET
+router.post('/thing/create', thing_controller.create_post) // create POST
+router.get('/thing/:id/update', thing_controller.update_get) // update GET
+router.post('/thing/:id/update', thing_controller.update_post) // update POST
+router.get('/thing/:id', thing_controller.detail) // detail GET
+router.get('/things', thing_controller.list) // list GET
 
 module.exports = router;

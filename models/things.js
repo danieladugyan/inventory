@@ -10,8 +10,7 @@ let ThingSchema = new Schema({
   warranty_expires: Date,
   lended: {type: Boolean, default: false},
   receipt: String,
-  notes: String,
-  things: [{type: Schema.Types.ObjectId, ref: 'Thing'}]
+  notes: String
 })
 
 // Location detail link

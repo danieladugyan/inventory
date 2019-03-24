@@ -8,14 +8,21 @@ class ThingList extends React.Component {
     return (
       <DefaultLayout>
         <h1>{title}</h1>
-        <h3><a href="/thing/create">Add thing</a></h3>
-        <ul>
+        <a href="/thing/create"><button type="button" className="btn btn-success btn-lg">Add thing</button></a>
+        <div className="card-group pt-md-3">
           {thing_list ? (thing_list.map((thing) =>
-            <li key={thing}><a href={thing.url}>{thing.name}</a></li>
+            <div className="card" key={thing} style={{width: "18rem"}}>
+              {/*<img className="card-img-top" src="#" alt="Card image top"/>*/}
+              <div className="card-body">
+                <h5 className="card-title">{thing.name}</h5>
+                <p className="card-text">{thing.notes}</p>
+                <a href={thing.url} className="btn btn-primary">Details</a>
+              </div>
+            </div>
           )) : (
-            <li>There are no things.</li>
+            <p>There are no things.</p>
           )}
-        </ul>
+        </div>
       </DefaultLayout>
     )
   }

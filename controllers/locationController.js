@@ -24,7 +24,6 @@ exports.detail = (req, res, next) => {
       // Generate QR Code
       qrcode.toDataURL(location.qrcode, {errorCorrectionLevel: 'H'})
       .then(imgdata => {
-        console.log(location)
         res.render('location_detail', {location: location, location_locations: location.locations,
                                        location_things: location.things, qrdata: imgdata});
       }).catch(err => {
@@ -101,3 +100,15 @@ exports.create_post = [
     }
   }
 ]
+
+exports.update_get = (req, res, next) => {
+
+};
+
+exports.update_post = (req, res, next) => {
+
+};
+
+exports.update_delete = (req, res, next) => {
+
+};
