@@ -26,10 +26,11 @@ exports.detail = (req, res, next) => {
       err.status = 404;
       return next(err)
     } else {
-      let qrcodetext = results.thing.qrcode;
-      qrcode.toDataURL(qrcodetext, {errorCorrectionLevel: 'H'})
+      console.log(results.location)
+      // Generate QR Code
+      qrcode.toDataURL(results.thing.qrcode, {errorCorrectionLevel: 'H'})
         .then(url => {
-          res.render('thing_detail', {thing: results.thing, location: results.location, qrdata: url});
+          res.render('thing_detail', {thing: results.thing, location: results.location[0], qrdata: url});
         }).catch(err => {
           console.error(err)
         });
@@ -46,13 +47,15 @@ exports.create_get = (req, res, next) => {
 
 exports.create_post = [
   // Validate fields.
-  body('name').isLength({ min: 1 }).trim().withMessage('Name must be specified.').isAlphanumeric().withMessage('Name has non-alphanumeric characters.'),
+  body('name').isLength({ min: 1 }).trim().withMessage('Name must be specified.'),
+  body('date_of_purchase', 'Invalid date of purchase').optional({ checkFalsy: true }).isISO8601(),
+  body('warranty_expires', 'Invalid warranty expiry date').optional({ checkFalsy: true }).isISO8601(),
 
   // Sanitize fields
   sanitizeBody('name').trim().escape(),
   sanitizeBody('price').trim().escape(),
-  sanitizeBody('date_of_purchase').trim().escape(),
-  sanitizeBody('warranty_expires').trim().escape(),
+  sanitizeBody('date_of_purchase').trim().escape().toDate(),
+  sanitizeBody('warranty_expires').trim().escape().toDate(),
   sanitizeBody('receipt').trim().escape(),
   sanitizeBody('notes').trim().escape(),
 
@@ -61,8 +64,7 @@ exports.create_post = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       // Handle errors
-      res.render('thing_form', {title: "Create Thing", thing: req.body, errors: errors.array()});
-      return;
+      return res.render('thing_form', {errors: errors.array(), thing: req.body})
     } else {
       // If there are no errors:
       let thing = new Thing(
@@ -81,3 +83,11 @@ exports.create_post = [
     }
   }
 ]
+
+exports.update_get = (req, res, next) => {
+
+};
+
+exports.update_post = (req, res, next) => {
+
+};

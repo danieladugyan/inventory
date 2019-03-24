@@ -4,9 +4,17 @@ const DefaultLayout = require('./layouts/default');
 class ThingForm extends React.Component {
   render() {
     let thing = this.props.thing;
-    let errors = this.props.error;
+    let errors = this.props.errors;
     return (
       <DefaultLayout>
+        {errors ? (
+          <div className="alert alert-danger" role="alert">
+            <ul>
+              {errors.map(error => <li key={error}>{error.msg}{console.log(error)}</li>)}
+            </ul>
+          </div>
+        ): ""}
+
         <form method="POST" action="">
           <div className='form-group'>
             <label htmlFor="name">Name:</label>
@@ -34,13 +42,6 @@ class ThingForm extends React.Component {
           </div>
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
-
-        {errors ? (
-          <ul>
-            {errors.map(error => <li key={error}>{error.msg}{console.log(error)}</li>)}
-          </ul>
-        ) : ""}
-
       </DefaultLayout>
     )
   }

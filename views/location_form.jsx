@@ -4,9 +4,17 @@ const DefaultLayout = require('./layouts/default');
 class LocationForm extends React.Component {
   render() {
     let location = this.props.location;
-    let errors   = this.props.error;
+    let things   = this.props.things;
+    let errors   = this.props.errors;
     return (
       <DefaultLayout>
+        {errors ? (
+          <div className="alert alert-danger" role="alert">
+            <ul>
+              {errors.map(error => <li key={error}>{error.msg}</li>)}
+            </ul>
+          </div>
+        ): ""}
         <form method="POST" action="">
           <div className='form-group'>
             <label htmlFor="name">Name:</label>
@@ -20,15 +28,18 @@ class LocationForm extends React.Component {
             <label htmlFor="desc">Description:</label>
             <input id="desc" name="desc" className="form-control" type="text" placeholder="Description" defaultValue={undefined === location ? '' : location.desc}></input>
           </div>
+          <label htmlFor="things">Things:</label><br/>
+          <select className="selectpicker" id="things" name="things" data-live-search="true" placeholder="" multiple defaultValue={[]}>
+            {things ? (things.map((thing) =>
+              <option key={thing}>{thing.name}</option>
+            )) : (
+              ""
+            )}
+          </select>
+          <br/><br/>
+
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
-
-        {errors ? (
-          <ul>
-            {errors.map(error => <li key={error}>{error.msg}</li>)}
-          </ul>
-        ) : ""}
-
       </DefaultLayout>
     )
   }

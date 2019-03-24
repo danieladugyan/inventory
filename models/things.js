@@ -10,12 +10,13 @@ let ThingSchema = new Schema({
   warranty_expires: Date,
   lended: {type: Boolean, default: false},
   receipt: String,
-  notes: String
+  notes: String,
+  things: [{type: Schema.Types.ObjectId, ref: 'Thing'}]
 })
 
 // Location detail link
 ThingSchema.virtual('url').get(function() {
-  return 'thing/' + this._id
+  return '/thing/' + this._id
 })
 
 // Generate QR code

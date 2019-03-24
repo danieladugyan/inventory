@@ -11,7 +11,7 @@ class ThingDetail extends React.Component {
 
     return (
       <DefaultLayout>
-        <h1>{thing.name} | {thing.location}</h1>
+        <h1>{thing.name} | <a href={location.url}>{location.name}</a></h1>
 
         <div>
           {/*<p>Image: {thing.image}</p>*/}

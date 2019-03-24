@@ -14,7 +14,7 @@ let LocationSchema = new Schema({
 
 // Location detail link
 LocationSchema.virtual('url').get(function() {
-  return 'location/' + this._id
+  return '/location/' + this._id
 })
 
 // Generate QR code
