@@ -10,7 +10,7 @@ class ThingForm extends React.Component {
         {errors ? (
           <div className="alert alert-danger" role="alert">
             <ul>
-              {errors.map(error => <li key={error}>{error.msg}{console.log(error)}</li>)}
+              {errors.map(error => <li key={error}>{error.msg}</li>)}
             </ul>
           </div>
         ): ""}

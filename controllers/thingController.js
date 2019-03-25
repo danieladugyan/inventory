@@ -4,39 +4,34 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
 
-exports.list = (req, res, next) => {
-  Thing.find().sort([['name', 'ascending']]).exec((err, list_things) => {
-    if (err) {return next(err)}
-    res.render('thing_list', {title: 'Thing List', thing_list: list_things})
-  })
+function errorHandling(error) {
+  console.error(err);
+  return res.status(500).send();
 }
 
-exports.detail = (req, res, next) => {
-  let queries = ["thing", "location"];
-  Promise.all([
-    () => Thing.findById(req.params.id).exec(),
-    () => Location.find({'things':req.params.id})
-  ].map(f => f())
-  ).then(results => {
-    results = Object.assign(...queries.map((k, i) => ({[k]: results[i]})));
-    if (results.thing == null) {
-      let err = new Error('Thing not found');
-      err.status = 404;
-      return next(err)
-    } else {
-      // Generate QR Code
-      qrcode.toDataURL(results.thing.qrcode, {errorCorrectionLevel: 'H'})
-        .then(url => {
-          res.render('thing_detail', {thing: results.thing, location: results.location[0], qrdata: url});
-        }).catch(err => {
-          console.error(err)
-        });
-    }
+exports.list = async (req, res) => {
+  try {
+    let list_things = await Thing.find().sort([['name', 'ascending']]).exec();
+    res.render('thing_list', {title: 'Thing List', thing_list: list_things});
+  } catch (err) {
+    errorHandling(err);
   }
-  ).catch(err => {
-  next(err) // Error in API usage
-  });
-};
+}
+
+exports.detail = async (req, res) => {
+  try {
+    let thing = await Thing.findById(req.params.id);
+    let location = await Location.find({'things':req.params.id});
+    if (thing == null) {
+      res.status(404).send('Location not found!');
+    } else {
+        let imgdata = await qrcode.toDataURL(thing.qrcode, {errorCorrectionLevel: 'H'});
+        res.render('thing_detail', {thing: thing, location: location[0], qrdata: imgdata});
+    }
+  } catch (err) {
+    errorHandling(err);
+  }
+}
 
 exports.create_get = (req, res, next) => {
   res.render('thing_form', {title: 'Create Thing'})
@@ -57,35 +52,40 @@ exports.create_post = [
   sanitizeBody('notes').trim().escape(),
 
   // Process request after validation and sanitization
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // Handle errors
-      return res.render('thing_form', {errors: errors.array(), thing: req.body})
-    } else {
-      // If there are no errors:
-      let thing = new Thing(
-        {
-          name: req.body.name,
-          price: req.body.price,
-          date_of_purchase: req.body.date_of_purchase,
-          warranty_expires: req.body.warranty_expires,
-          receipt: req.body.receipt,
-          notes: req.body.notes
-        });
-      thing.save((err) => {
-        if (err) {return next(err)}
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        // Handle errors
+        return res.render('thing_form', {errors: errors.array(), thing: req.body});
+      } else {
+        // If there are no errors:
+        let thing = new Thing(
+          {
+            name: req.body.name,
+            price: req.body.price,
+            date_of_purchase: req.body.date_of_purchase,
+            warranty_expires: req.body.warranty_expires,
+            receipt: req.body.receipt,
+            notes: req.body.notes
+          });
+        await thing.save();
         res.redirect("/things")
-      })
+      }
+    } catch (err) {
+      errorHandling(err);
     }
   }
 ]
 
-exports.update_get = (req, res, next) => {
-  Thing.findById(req.params.id).exec().then(thing => {
+exports.update_get = async (req, res) => {
+  try {
+    let thing = await Thing.findById(req.params.id).exec()
     res.render('thing_form', {title: 'Update Thing', thing: thing})
-  }).catch(err => next(err))
-};
+  } catch (err) {
+    errorHandling(err);
+  }
+}
 
 exports.update_post = [
   // Validate fields.
@@ -102,25 +102,27 @@ exports.update_post = [
   sanitizeBody('notes').trim().escape(),
 
   // Process request after validation and sanitization
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // Handle errors
-      return res.render('thing_form', {errors: errors.array(), thing: req.body})
-    } else {
-      // If there are no errors:
-      Thing.updateOne({_id: req.params.id},
-        {
-          name: req.body.name,
-          price: req.body.price,
-          date_of_purchase: req.body.date_of_purchase,
-          warranty_expires: req.body.warranty_expires,
-          receipt: req.body.receipt,
-          notes: req.body.notes
-        }, (err) => {
-          if (err) {return next(err)}
-          res.redirect("/things")
-        })
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        // Handle errors
+        return res.render('thing_form', {errors: errors.array(), thing: req.body})
+      } else {
+        // If there are no errors:
+        await Thing.updateOne({_id: req.params.id},
+          {
+            name: req.body.name,
+            price: req.body.price,
+            date_of_purchase: req.body.date_of_purchase,
+            warranty_expires: req.body.warranty_expires,
+            receipt: req.body.receipt,
+            notes: req.body.notes
+          })
+        res.redirect("/things")
+      }
+    } catch (err) {
+      errorHandling(err);
     }
   }
 ]

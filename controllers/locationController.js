@@ -4,13 +4,17 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
 
+function errorHandling(error) {
+  console.error(err);
+  return res.status(500).send();
+}
+
 exports.list = async (req, res) => {
   try {
     let list_locations = await Location.find().sort([['type', 'ascending']]).exec();
     res.render('location_list', {title: 'Location List', location_list: list_locations});
   } catch (err) {
-    console.error(err);
-    return res.status(500).send();
+    errorHandling(err);
   }
 }
 
@@ -25,8 +29,7 @@ exports.detail = async (req, res) => {
                                      location_things: location.things, qrdata: imgdata});
     }
   } catch (err) {
-    console.error(err);
-    return res.status(500).send();
+    errorHandling(err);
   }
 }
 
@@ -35,8 +38,7 @@ exports.create_get = async (req, res) => {
     let things_list = await Thing.find({}).exec();
     res.render('location_form', {title: 'Create Location', things_list: things_list})
   } catch (err) {
-    console.error(err);
-    return res.status(500).send();
+    errorHandling(err);
   }
 }
 
@@ -57,7 +59,6 @@ exports.create_post = [
       if (!errors.isEmpty()) {
         // Handle errors
         let things_list = await Thing.find({}).exec();
-        console.log(things_list);
         res.render('location_form', {title: "Create Location", location: req.body, things_list: things_list, errors: errors.array()});
       } else {
         // If there are no errors:
@@ -72,8 +73,7 @@ exports.create_post = [
           res.redirect("/locations")
       }
     } catch (err) {
-      console.error(err);
-      return res.status(500).send();
+      errorHandling(err);
     }
   }
 ]
@@ -84,8 +84,7 @@ exports.update_get = async (req, res) => {
     let things_list = await Thing.find({}).exec();
     res.render('location_form', {title: 'Update Location', things_list: things_list, location: location});
   } catch (err) {
-    console.error(err);
-    return res.status(500).send();
+    errorHandling(err);
   }
 }
 
@@ -106,7 +105,6 @@ exports.update_post = [
       if (!errors.isEmpty()) {
         // Handle errors
         let things_list = await Thing.find({}).exec();
-        console.log(things_list);
         res.render('location_form', {title: "Create Location", location: req.body, things_list: things_list, errors: errors.array()});
       } else {
         // If there are no errors:
@@ -120,8 +118,7 @@ exports.update_post = [
         res.redirect('/locations');
       }
     } catch (err) {
-      console.error(err);
-      return res.status(500).send();
+      errorHandling(err);
     }
   }
 ]
