@@ -11,6 +11,7 @@ class DefaultLayout extends React.Component {
           <link rel="shortcut icon" type="image/ico" href="images/favicon.ico"/>
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossOrigin="anonymous"/>
           <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous"/>
+          <link rel="stylesheet" href="/css/stylesheet.css"/>
           {this.props.css ? <link rel="stylesheet" type="text/css" href={"/css/" + this.props.css + ".css"}/> : null}
         </head>
 
@@ -26,13 +27,13 @@ class DefaultLayout extends React.Component {
                 <a className="nav-item nav-link active" href="/">Home</a>
                 <a className="nav-item nav-link" href="/locations">Locations</a>
                 <a className="nav-item nav-link" href="/things">Things</a>
-                <li className="nav-item dropdown">
+                {/*<li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
                   <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a className="dropdown-item" href="https://www.mapveto.com">Location 1</a>
                     <a className="dropdown-item" href="https://www.gymnasietips.com">Location 2</a>
                   </div>
-                </li>
+                </li>*/}
               </div>
               <form className="form-inline">
                 <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>

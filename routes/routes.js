@@ -8,7 +8,7 @@ const thing_controller = require("../controllers/thingController");
 
 // GET home page.
 router.get('/', (req, res) => {
-  res.redirect('/users')
+  res.redirect('/locations')
 });
 
 // User routes

@@ -25,7 +25,7 @@ class ThingDetail extends React.Component {
           <p>Price: {thing.price}:-</p>
           <p>Warranty Expires: {warranty}</p>
           <p>Lended: {thing.lended.toString()}</p>
-          <p>Receipt: {this.receipt}</p>
+          <p>Receipt: {thing.receipt}</p>
           <p>Notes: {thing.notes}</p>
         </div>
 

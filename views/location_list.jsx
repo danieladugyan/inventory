@@ -9,19 +9,24 @@ class LocationList extends React.Component {
       <DefaultLayout>
         <h1>{title}</h1>
         <a href="/location/create"><button type="button" className="btn btn-success btn-lg">Add location</button></a>
-        <div className="card-group pt-md-3">
-          {location_list ? (location_list.map((location) =>
-            <div className="card" key={location} style={{width: "18rem"}}>
-              {/*<img className="card-img-top" src="#" alt="Card image top"/>*/}
-              <div className="card-body">
-                <h5 className="card-title">{location.name}</h5>
-                <p className="card-text">{location.desc}</p>
-                <a href={location.url} className="btn btn-primary">Details</a>
+        <div className="card-deck">
+          <div className="row">
+            {location_list ? (location_list.map((location) =>
+              <div className="col-sm-6 p-2" style={{"maxWidth": "20rem"}} key={location}>
+                <div className="card card-shadow">
+                <a href={location.url} className="link-unstyled">
+                  <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                  <div className="card-body">
+                    <h5 className="card-title">{location.name}</h5>
+                    <p className="card-text">{location.desc}</p>
+                  </div>
+                </a>
+                  </div>
               </div>
-            </div>
-          )) : (
-            <p>There are no locations.</p>
-          )}
+            )) : (
+              <p>There are no locations.</p>
+            )}
+          </div>
         </div>
       </DefaultLayout>
     )

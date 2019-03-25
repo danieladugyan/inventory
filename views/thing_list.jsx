@@ -10,18 +10,22 @@ class ThingList extends React.Component {
         <h1>{title}</h1>
         <a href="/thing/create"><button type="button" className="btn btn-success btn-lg">Add thing</button></a>
         <div className="card-group pt-md-3">
-          {thing_list ? (thing_list.map((thing) =>
-            <div className="card" key={thing} style={{width: "18rem"}}>
-              {/*<img className="card-img-top" src="#" alt="Card image top"/>*/}
-              <div className="card-body">
-                <h5 className="card-title">{thing.name}</h5>
-                <p className="card-text">{thing.notes}</p>
-                <a href={thing.url} className="btn btn-primary">Details</a>
+          <div className="row">
+            {thing_list ? (thing_list.map((thing) =>
+              <div className="col-sm-3" key={thing}>
+                <div className="card">
+                  <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                  <div className="card-body">
+                    <h5 className="card-title">{thing.name}</h5>
+                    {/*<p className="card-text">{thing.notes}</p>*/}
+                    <a href={thing.url} className="btn btn-primary stretched-link">Details</a>
+                  </div>
+                </div>
               </div>
-            </div>
-          )) : (
-            <p>There are no things.</p>
-          )}
+            )) : (
+              <p>There are no things.</p>
+            )}
+          </div>
         </div>
       </DefaultLayout>
     )

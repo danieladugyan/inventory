@@ -13,32 +13,48 @@ class LocationDetail extends React.Component {
         <p>Description: {location.desc}</p>
         <a href={location._id + '/update/'}><button type="button" className="btn btn-success btn-lg">Edit</button></a>
 
-        <div>
-          <h4>Locations</h4>
-          {location_locations[0] ? (
-            location_locations.map(location =>
-              <div key={location}>
-                <dt><a href={location.url}>{location.name}</a></dt>
-                <dd>{location.desc}</dd>
-              </div>
-            )
-          ) : (
-            <p>This location doesn't contain any locations.</p>
-          )}
+        <h4>Locations</h4>
+        <div className="card-group pt-md-3">
+          <div className="row">
+            {location_locations[0] ? (
+              location_locations.map(location =>
+                <div className="col-sm-5" key={location}>
+                  <div className="card">
+                    <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                    <div className="card-body">
+                      <h5 className="card-title">{location.name}</h5>
+                      {/*<p className="card-text">{location.desc}</p>*/}
+                      <a href={location.url} className="btn btn-primary stretched-link">Details</a>
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <a href="/location/create"><button type="button" className="btn btn-success btn-lg">Add location</button></a>
+            )}
+          </div>
         </div>
 
-        <div>
-          <h4>Things</h4>
-          {location_things[0] ? (
-            location_things.map(thing =>
-              <div key={thing}>
-                <dt><a href={thing.url}>{thing.name}</a></dt>
-                <dd>{thing.notes}</dd>
-              </div>
-            )
-          ) : (
-            <p>This location doesn't contain any things.</p>
-          )}
+        <h4>Things</h4>
+        <div className="card-group pt-md-3">
+          <div className="row">
+            {location_things ? (
+              location_things.map(thing =>
+                <div className="col-sm-5" key={thing}>
+                  <div className="card">
+                    <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                    <div className="card-body">
+                      <h5 className="card-title">{thing.name}</h5>
+                      {/*<p className="card-text">{thing.notes}</p>*/}
+                      <a href={thing.url} className="btn btn-primary">Details</a>
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              <a href="/thing/create"><button type="button" className="btn btn-success btn-lg">Add thing</button></a>
+            )}
+          </div>
         </div>
 
         <img src={this.props.qrdata}/>
