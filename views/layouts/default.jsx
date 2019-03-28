@@ -39,8 +39,8 @@ class DefaultLayout extends React.Component {
                 <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
                 <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
               </form>
+              <a className="btn btn-outline-success my-2 my-sm-0" href="/login">Sign in</a>
             </div>
-            <a className="btn btn-outline-success my-2 my-sm-0" href="/login">Sign in</a>
           </nav>
 
           {/* Page content */}

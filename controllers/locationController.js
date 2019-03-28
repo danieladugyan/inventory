@@ -1,5 +1,6 @@
-const Location = require("../models/locations");
-const Thing = require("../models/things");
+const path = require('path');
+const Location = require(path.join("..", "models", "locations"))
+const Thing = require(path.join("..", "models", "things"))
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');

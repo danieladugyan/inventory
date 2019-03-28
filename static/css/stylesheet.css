@@ -1,3 +1,7 @@
+body {
+    padding-bottom: 120px;
+}
+
 .link-unstyled, .link-unstyled:visited, .link-unstyled:hover, .link-unstyled:active, .link-unstyled:focus, .link-unstyled:active:hover {
   font-style: inherit;
   color: inherit;

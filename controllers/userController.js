@@ -1,6 +1,6 @@
 const path = require('path');
 
-const Location = require(path.join(__dirname, "..\\models\\locations"));
+const Location = require(path.join("..", "models", "locations"));
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 

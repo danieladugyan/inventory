@@ -14,23 +14,24 @@ class LocationDetail extends React.Component {
         <a href={location._id + '/update/'}><button type="button" className="btn btn-success btn-lg">Edit</button></a>
 
         <h4>Locations</h4>
-        <div className="card-group pt-md-3">
+        <div className="card-deck">
           <div className="row">
             {location_locations[0] ? (
               location_locations.map(location =>
-                <div className="col-sm-5" key={location}>
-                  <div className="card">
-                    <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
-                    <div className="card-body">
-                      <h5 className="card-title">{location.name}</h5>
-                      {/*<p className="card-text">{location.desc}</p>*/}
-                      <a href={location.url} className="btn btn-primary stretched-link">Details</a>
-                    </div>
+                <div className="col-sm-6 p-2" style={{"maxWidth": "20rem"}} key={location}>
+                  <div className="card card-shadow">
+                    <a href={location.url} className="btn btn-primary link-unstyled">
+                      <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                      <div className="card-body">
+                        <h5 className="card-title">{location.name}</h5>
+                        <p className="card-text">{location.desc}</p>
+                      </div>
+                    </a>
                   </div>
                 </div>
               )
             ) : (
-              <a href="/location/create"><button type="button" className="btn btn-success btn-lg">Add location</button></a>
+              <a href="/location/create" className="btn btn-success btn-lg">Add location</a>
             )}
           </div>
         </div>
