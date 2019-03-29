@@ -37,7 +37,8 @@ exports.detail = async (req, res) => {
 exports.create_get = async (req, res) => {
   try {
     let things_list = await Thing.find({}).exec();
-    res.render('location_form', {title: 'Create Location', things_list: things_list})
+    let locations_list = await Location.find({}).exec();
+    res.render('location_form', {title: 'Create Location', things_list: things_list, locations_list:locations_list})
   } catch (err) {
     errorHandling(err);
   }
@@ -83,7 +84,8 @@ exports.update_get = async (req, res) => {
   try {
     let location = await Location.findById(req.params.id).populate('things').exec();
     let things_list = await Thing.find({}).exec();
-    res.render('location_form', {title: 'Update Location', things_list: things_list, location: location});
+    let locations_list = await Location.find({}).exec();
+    res.render('location_form', {title: 'Update Location', things_list: things_list, location: location, locations_list: locations_list});
   } catch (err) {
     errorHandling(err);
   }

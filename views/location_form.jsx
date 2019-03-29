@@ -5,6 +5,8 @@ class LocationForm extends React.Component {
   render() {
     let location = this.props.location;
     let things_list = this.props.things_list;
+    let locations_list = this.props.locations_list;
+
     let things = [];
     if (location) {
       if (location.things) {
@@ -18,6 +20,8 @@ class LocationForm extends React.Component {
         }
       }
     }
+
+    let locations = [];
     let errors = this.props.errors;
     return (
       <DefaultLayout>
@@ -41,14 +45,26 @@ class LocationForm extends React.Component {
             <label htmlFor="desc">Description:</label>
             <input id="desc" name="desc" className="form-control" type="text" placeholder="Description" defaultValue={undefined === location ? '' : location.desc}></input>
           </div>
-          <label htmlFor="things">Things:</label><br/>
-          <select className="selectpicker" id="things" name="things" data-live-search="true" placeholder="" multiple defaultValue={things}>
-            {things_list ? (things_list.map((thing) =>
-              <option key={thing} value={thing._id}>{thing.name}</option>
-            )) : (
-              ""
-            )}
-          </select>
+          <div className='form-group'>
+            <label htmlFor="things">Things:</label><br/>
+            <select className="selectpicker" id="things" name="things" data-live-search="true" placeholder="" multiple defaultValue={things}>
+              {things_list ? (things_list.map((thing) =>
+                <option key={thing} value={thing._id}>{thing.name}</option>
+              )) : (
+                ""
+              )}
+            </select>
+          </div>
+          <div className='form-group'>
+            <label htmlFor="locations">Locations:</label><br/>
+            <select className="selectpicker" id="locations" name="locations" data-live-search="true" placeholder="" multiple defaultValue={locations}>
+              {locations_list ? (locations_list.map((location) =>
+                <option key={location} value={location._id}>{location.name}</option>
+              )) : (
+                ""
+              )}
+            </select>
+          </div>
           <br/><br/>
 
           <button className="btn btn-primary" type="submit">Submit</button>

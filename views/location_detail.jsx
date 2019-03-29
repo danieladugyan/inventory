@@ -14,6 +14,7 @@ class LocationDetail extends React.Component {
         <a href={location._id + '/update/'}><button type="button" className="btn btn-success btn-lg">Edit</button></a>
 
         <h4>Locations</h4>
+        <a href="/location/create" className="btn btn-success btn-lg">Add location</a>
         <div className="card-deck">
           <div className="row">
             {location_locations[0] ? (
@@ -31,24 +32,25 @@ class LocationDetail extends React.Component {
                 </div>
               )
             ) : (
-              <a href="/location/create" className="btn btn-success btn-lg">Add location</a>
+              ""
             )}
           </div>
         </div>
 
         <h4>Things</h4>
-        <div className="card-group pt-md-3">
+        <div className="card-deck">
           <div className="row">
             {location_things ? (
               location_things.map(thing =>
                 <div className="col-sm-5" key={thing}>
-                  <div className="card">
-                    <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
-                    <div className="card-body">
-                      <h5 className="card-title">{thing.name}</h5>
-                      {/*<p className="card-text">{thing.notes}</p>*/}
-                      <a href={thing.url} className="btn btn-primary">Details</a>
-                    </div>
+                  <div className="card card-shadow">
+                    <a href={thing.url} className="btn btn-primary link-unstyled">
+                      <img className="card-img-top" src="https://placehold.it/500x280" alt="Card image top"/>
+                      <div className="card-body">
+                        <h5 className="card-title">{thing.name}</h5>
+                        <p className="card-text">{thing.notes}</p>
+                      </div>
+                    </a>
                   </div>
                 </div>
               )
