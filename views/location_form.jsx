@@ -65,8 +65,7 @@ class LocationForm extends React.Component {
               )}
             </select>
           </div>
-          <br/><br/>
-
+          
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
       </DefaultLayout>

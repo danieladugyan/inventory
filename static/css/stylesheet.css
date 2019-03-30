@@ -2,24 +2,16 @@ body {
     padding-bottom: 120px;
 }
 
-.link-unstyled, .link-unstyled:visited, .link-unstyled:hover, .link-unstyled:active, .link-unstyled:focus, .link-unstyled:active:hover {
-  font-style: inherit;
-  color: inherit;
-  background-color: transparent;
-  font-size: inherit;
-  text-decoration: none;
-  font-variant: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  font-family: inherit;
-  border-radius: inherit;
-  border: inherit;
-  outline: inherit;
-  box-shadow: inherit;
-  padding: inherit;
-  vertical-align: inherit;
+a.link-unstyled {
+    color:#000000 !important;
+    text-decoration:none;
 }
 
 .card-shadow:hover {
   box-shadow: 0 0 11px rgba(33,33,33,.2);
+}
+
+.card {
+  min-width: 15rem;
+  max-width: 15rem;
 }
