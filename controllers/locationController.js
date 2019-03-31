@@ -5,23 +5,30 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
 
-function errorHandling(error) {
-  console.error(err);
+function errorHandling(error, res) {
+  console.error(error);
   return res.status(500).send();
 }
 
 exports.list = async (req, res) => {
   try {
     let list_locations = await Location.find().sort([['type', 'ascending']]).exec();
+
+    // Filter out locations that are stored in other locations
+    let filterids = [];
+    list_locations.forEach(location => filterids.push(location.locations));
+    filterids = [].concat.apply([], filterids);
+    list_locations = list_locations.filter(location => !filterids.includes(location._id.toString()));
+
     res.render('location_list', {title: 'Location List', location_list: list_locations});
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
 exports.detail = async (req, res) => {
   try {
-    let location = await Location.findById(req.params.id).populate("things").exec();
+    let location = await Location.findById(req.params.id).populate("things").populate("locations").exec();
     if (location == null) {
       res.status(404).send('Location not found!');
     } else {
@@ -30,7 +37,7 @@ exports.detail = async (req, res) => {
                                      location_things: location.things, qrdata: imgdata});
     }
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -40,7 +47,7 @@ exports.create_get = async (req, res) => {
     let locations_list = await Location.find({}).exec();
     res.render('location_form', {title: 'Create Location', things_list: things_list, locations_list:locations_list})
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -69,25 +76,26 @@ exports.create_post = [
             name: req.body.name,
             type: req.body.type,
             desc: req.body.desc,
-            things: req.body.things
+            things: req.body.things,
+            locations: req.body.locations
           });
           await location.save();
           res.redirect("/locations")
       }
     } catch (err) {
-      errorHandling(err);
+      errorHandling(err, res);
     }
   }
 ]
 
 exports.update_get = async (req, res) => {
   try {
-    let location = await Location.findById(req.params.id).populate('things').exec();
+    let location = await Location.findById(req.params.id).populate('things').populate('locations').exec();
     let things_list = await Thing.find({}).exec();
     let locations_list = await Location.find({}).exec();
     res.render('location_form', {title: 'Update Location', things_list: things_list, location: location, locations_list: locations_list});
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -116,16 +124,27 @@ exports.update_post = [
             name: req.body.name,
             type: req.body.type,
             desc: req.body.desc,
-            things: req.body.things
+            things: req.body.things,
+            locations: req.body.locations
           });
         res.redirect('/locations');
       }
     } catch (err) {
-      errorHandling(err);
+      errorHandling(err, res);
     }
   }
 ]
 
-exports.update_delete = (req, res, next) => {
-
+exports.delete_get = async (req, res) => {
+  try {
+    let container = await Location.find({'locations':req.params.id}); // find ref to deleted location
+    if (container) {
+      await container[0].locations.pull(req.params.id);
+      await container[0].save();
+    }
+    await Location.findByIdAndDelete(req.params.id).exec();
+    res.redirect('/locations');
+  } catch (err) {
+    errorHandling(err, res);
+  }
 };

@@ -22,6 +22,19 @@ class LocationForm extends React.Component {
     }
 
     let locations = [];
+    if (location) {
+      if (location.locations) {
+        if (typeof location.locations === 'string') {
+          locations.push(location.locations._id)
+        } else {
+          // if more than one thing (prevents forEach from throwing error for < 2 things)
+          location.locations.forEach(location => {
+            locations.push(location._id)
+          })
+        }
+      }
+    }
+
     let errors = this.props.errors;
     return (
       <DefaultLayout>
@@ -65,7 +78,7 @@ class LocationForm extends React.Component {
               )}
             </select>
           </div>
-          
+
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
       </DefaultLayout>

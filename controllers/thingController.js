@@ -128,6 +128,16 @@ exports.update_post = [
   }
 ]
 
-exports.delete_post = (req, res, next) => {
-
+exports.delete_get = async (req, res) => {
+  try {
+    let container = await Location.find({'things':req.params.id}); // find ref to deleted location
+    if (container) {
+      await container[0].things.pull(req.params.id);
+      await container[0].save();
+    }
+    await Thing.findByIdAndDelete(req.params.id).exec();
+    res.redirect('/things');
+  } catch (err) {
+    errorHandling(err, res);
+  }
 };

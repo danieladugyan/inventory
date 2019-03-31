@@ -10,7 +10,7 @@ class LocationList extends React.Component {
     return (
       <DefaultLayout>
         <div className="card-deck">
-          <AddButton update_link="/location/create" text="Add location"/>
+          <AddButton update_link="/location/create" text="Create location"/>
           {location_list ? (location_list.map((location) =>
             <Card url={location.url} name={location.name} desc={location.notes} key={location}/>
           )) : (

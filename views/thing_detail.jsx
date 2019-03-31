@@ -1,16 +1,18 @@
 const React = require('react');
 const DefaultLayout = require('./layouts/default');
+const DeleteButton = require('./components/delete_button');
 const moment = require('moment');
 
 class ThingDetail extends React.Component {
   render() {
     let thing = this.props.thing;
     let location = this.props.location;
+    let update_link = "/thing/" + thing._id + "/update"
     let header;
     if (location) {
-      header = <h1>{thing.name} | <a href={location.url}>{location.name}</a></h1>;
+      header = <h1>{thing.name} | <a href={location.url}>{location.name}</a> <DeleteButton id={thing._id} type="thing"/> <a href={update_link} className="link-unstyled"><i className="fas fa-edit font float-right pt-2" style={{fontSize:"2rem"}}></i></a> </h1> ;
     } else {
-      header = <h1>{thing.name}</h1>;
+      header = <h1>{thing.name} <DeleteButton id={thing._id} type="thing"/> <a href={update_link} className="link-unstyled"><i className="fas fa-edit font float-right pt-2" style={{fontSize:"2rem"}}></i></a> </h1>;
     }
     let dop = moment(thing.date_of_purchase).format('MMMM Do, YYYY');
     let warranty = moment(thing.warranty_expires).format('MMMM Do, YYYY');
@@ -18,7 +20,6 @@ class ThingDetail extends React.Component {
     return (
       <DefaultLayout>
         {header}
-        <a href={thing._id + '/update/'}><button type="button" className="btn btn-success btn-lg">Edit</button></a>
         <div>
           {/*<p>Image: {thing.image}</p>*/}
           <p>Date of Purchase: {dop}</p>
