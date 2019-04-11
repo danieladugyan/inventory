@@ -6,6 +6,7 @@ let LocationSchema = new Schema({
   name: {type: String, required: true},
   type: {type: String, required: true},
   desc: String,
+  image: {data: Buffer, contentType: String},
   locations: [this],
   things: [{type: Schema.Types.ObjectId, ref: 'Thing'}]
 })

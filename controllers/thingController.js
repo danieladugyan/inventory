@@ -130,7 +130,7 @@ exports.update_post = [
 
 exports.delete_get = async (req, res) => {
   try {
-    let container = await Location.find({'things':req.params.id}); // find ref to deleted location
+    let container = await Location.findOne({'things':req.params.id}); // find ref to deleted location
     if (container) {
       await container[0].things.pull(req.params.id);
       await container[0].save();
