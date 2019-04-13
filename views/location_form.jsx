@@ -45,7 +45,11 @@ class LocationForm extends React.Component {
             </ul>
           </div>
         ): ""}
-        <form method="POST" action="">
+        <form method="POST" action="" encType="multipart/form-data">
+          <div className='form-group'>
+            <label htmlFor='image'>Image</label>
+            <input id="image" name="image" className="form-control" type="file"/>
+          </div>
           <div className='form-group'>
             <label htmlFor="name">Name:</label>
             <input id="name" name="name" className="form-control" required={true} type="text" placeholder="Name"  defaultValue={undefined === location ? '' : location.name}></input>

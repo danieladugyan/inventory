@@ -12,7 +12,7 @@ class LocationList extends React.Component {
         <div className="card-deck">
           <AddButton update_link="/location/create" text="Create location"/>
           {location_list ? (location_list.map((location) =>
-            <Card url={location.url} name={location.name} desc={location.notes} key={location}/>
+            <Card url={location.url} name={location.name} desc={location.notes} imgdata={location.imgdata} key={location}/>
           )) : (
             ""
           )}

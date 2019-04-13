@@ -4,6 +4,7 @@ const Thing = require(path.join("..", "models", "things"))
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
+const fs = require('fs');
 
 function errorHandling(error, res) {
   console.error(error);
@@ -79,6 +80,9 @@ exports.create_post = [
             things: req.body.things,
             locations: req.body.locations
           });
+          location.image.data = fs.readFileSync(req.file.path);
+          location.image.contentType = 'image/png';
+          fs.unlinkSync(req.file.path);
           await location.save();
           res.redirect("/locations")
       }
@@ -119,8 +123,17 @@ exports.update_post = [
         res.render('location_form', {title: "Create Location", location: req.body, things_list: things_list, errors: errors.array()});
       } else {
         // If there are no errors:
+        imgobject = {};
+        if (req.file) {
+          imgobject = {
+            data: fs.readFileSync(req.file.path),
+            contentType: 'image/png'
+          }
+          fs.unlinkSync(req.file.path);
+        }
         await Location.updateOne({_id: req.params.id},
           {
+            image: imgobject,
             name: req.body.name,
             type: req.body.type,
             desc: req.body.desc,

@@ -18,6 +18,16 @@ LocationSchema.virtual('url').get(function() {
   return '/location/' + this._id
 })
 
+// Create base64 data ready for HTML use
+LocationSchema.virtual('imgdata').get(function() {
+  let data = this.image.data;
+  if (data) {
+    return "data:image/png;base64," + data.toString("base64");
+  } else {
+    return "https://placehold.it/500x280";
+  }
+})
+
 // Generate QR code
 LocationSchema.virtual('qrcode').get(function() {
   return this._id.toString()

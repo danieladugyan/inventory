@@ -4,13 +4,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load()
 }
 const bodyParser = require('body-parser');
-const multer = require('multer');
-
 const app = express();
 
 // Configuration
-app.use(bodyParser.urlencoded({ extended: true }));
-let upload = multer({ dest: 'uploads/' });
 app.use(express.static(__dirname + '/static')); // Serve static css and js files
 app.set('views', __dirname + '/views'); // Set views directory
 

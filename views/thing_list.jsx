@@ -12,7 +12,7 @@ class ThingList extends React.Component {
         <div className="card-deck">
           <AddButton update_link="/thing/create" text="Create thing"/>
           {thing_list ? (thing_list.map((thing) =>
-            <Card url={thing.url} name={thing.name} desc={thing.notes} key={thing}/>
+            <Card url={thing.url} name={thing.name} desc={thing.notes} imgdata={thing.imgdata} key={thing}/>
           )) : (
             ""
           )}

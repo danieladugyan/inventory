@@ -4,9 +4,10 @@ const Thing = require(path.join("..", "models", "things"));
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const qrcode = require('qrcode');
+const fs = require('fs');
 
-function errorHandling(error) {
-  console.error(err);
+function errorHandling(error, res) {
+  console.error(error);
   return res.status(500).send();
 }
 
@@ -15,7 +16,7 @@ exports.list = async (req, res) => {
     let list_things = await Thing.find().sort([['name', 'ascending']]).exec();
     res.render('thing_list', {title: 'Thing List', thing_list: list_things});
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -30,7 +31,7 @@ exports.detail = async (req, res) => {
         res.render('thing_detail', {thing: thing, location: location[0], qrdata: imgdata});
     }
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -70,11 +71,14 @@ exports.create_post = [
             receipt: req.body.receipt,
             notes: req.body.notes
           });
+        thing.image.data = fs.readFileSync(req.file.path);
+        thing.image.contentType = 'image/png';
+        fs.unlinkSync(req.file.path);
         await thing.save();
         res.redirect("/things")
       }
     } catch (err) {
-      errorHandling(err);
+      errorHandling(err, res);
     }
   }
 ]
@@ -84,7 +88,7 @@ exports.update_get = async (req, res) => {
     let thing = await Thing.findById(req.params.id).exec()
     res.render('thing_form', {title: 'Update Thing', thing: thing})
   } catch (err) {
-    errorHandling(err);
+    errorHandling(err, res);
   }
 }
 
@@ -108,11 +112,21 @@ exports.update_post = [
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         // Handle errors
+        console.log(req.body);
         return res.render('thing_form', {errors: errors.array(), thing: req.body})
       } else {
         // If there are no errors:
+        imgobject = {};
+        if (req.file) {
+          imgobject = {
+            data: fs.readFileSync(req.file.path),
+            contentType: 'image/png'
+          }
+          fs.unlinkSync(req.file.path);
+        }
         await Thing.updateOne({_id: req.params.id},
           {
+            image: imgobject,
             name: req.body.name,
             price: req.body.price,
             date_of_purchase: req.body.date_of_purchase,
@@ -120,10 +134,10 @@ exports.update_post = [
             receipt: req.body.receipt,
             notes: req.body.notes
           })
-        res.redirect("/things")
+        res.redirect("/things");
       }
     } catch (err) {
-      errorHandling(err);
+      errorHandling(err, res);
     }
   }
 ]
@@ -132,8 +146,8 @@ exports.delete_get = async (req, res) => {
   try {
     let container = await Location.findOne({'things':req.params.id}); // find ref to deleted location
     if (container) {
-      await container[0].things.pull(req.params.id);
-      await container[0].save();
+      await container.things.pull(req.params.id);
+      await container.save();
     }
     await Thing.findByIdAndDelete(req.params.id).exec();
     res.redirect('/things');

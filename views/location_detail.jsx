@@ -33,7 +33,7 @@ class LocationDetail extends React.Component {
 
             {location_locations ? (
               location_locations.map(location =>
-                <Card url={location.url} name={location.name} desc={location.notes} key={location}/>
+                <Card url={location.url} name={location.name} desc={location.notes} imgdata={location.imgdata} key={location}/>
               )
             ) : (
               ""

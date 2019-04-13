@@ -1,10 +1,13 @@
 const React = require('react');
 const DefaultLayout = require('./layouts/default');
+const moment = require('moment');
 
 class ThingForm extends React.Component {
   render() {
     let thing = this.props.thing;
     let errors = this.props.errors;
+    let date_of_purchase = thing && thing.date_of_purchase ? moment(thing.date_of_purchase).toISOString().substr(0,10) : "";
+    let warranty_expires = thing && thing.warranty_expires ? moment(thing.warranty_expires).toISOString().substr(0,10) : "";
     return (
       <DefaultLayout>
         {errors ? (
@@ -15,7 +18,11 @@ class ThingForm extends React.Component {
           </div>
         ): ""}
 
-        <form method="POST" action="">
+        <form method="POST" action="" encType="multipart/form-data">
+          <div className='form-group'>
+            <label htmlFor='image'>Image</label>
+            <input id="image" name="image" className="form-control" type="file" defaultValue=""/>
+          </div>
           <div className='form-group'>
             <label htmlFor="name">Name:</label>
             <input id="name" name="name" className="form-control" required={true} type="text" placeholder="Name"  defaultValue={undefined === thing ? '' : thing.name}></input>
@@ -27,11 +34,11 @@ class ThingForm extends React.Component {
           {/* add input to choose which location thing belongs to*/}
           <div className='form-group'>
             <label htmlFor="date_of_purchase">Date of purchase:</label>
-            <input id="date_of_purchase" name="date_of_purchase" className="form-control" type="date" defaultValue={undefined === thing ? '' : thing.date_of_purchase}></input>
+            <input id="date_of_purchase" name="date_of_purchase" className="form-control" type="date" defaultValue={undefined === thing ? '' : date_of_purchase}></input>
           </div>
           <div className='form-group'>
             <label htmlFor="warranty_expires">Warranty expires:</label>
-            <input id="warranty_expires" name="warranty_expires" className="form-control" type="date" defaultValue={undefined === thing ? '' : thing.warranty_expires}></input>
+            <input id="warranty_expires" name="warranty_expires" className="form-control" type="date" defaultValue={undefined === thing ? '' : warranty_expires}></input>
           </div>
           <div className='form-group'>
             <label htmlFor="notes">Receipt:</label>
