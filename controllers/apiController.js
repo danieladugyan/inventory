@@ -1,3 +1,6 @@
+const path = require('path');
+const Location = require(path.join("..", "models", "locations"))
+
 exports.locations = async (req, res) => {
   try {
     let list_locations = await Location.find().sort([['type', 'ascending']]).exec();
@@ -8,7 +11,7 @@ exports.locations = async (req, res) => {
     filterids = [].concat.apply([], filterids);
     list_locations = list_locations.filter(location => !filterids.includes(location._id.toString()));
 
-    res.json(list_locations)
+    res.json(list_locations);
   } catch (error) {
     res.status(500).send(error);
   }
