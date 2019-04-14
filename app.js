@@ -39,4 +39,4 @@ const Routes = require(__dirname + '/routes/routes');
 app.use('/', Routes);
 
 const APIRoutes = require(__dirname + '/routes/apiroutes');
-app.use('/api/', APIRoutes);
+app.use('/api', APIRoutes);
