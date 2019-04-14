@@ -38,4 +38,5 @@ router.get('/thing/:id/delete', thing_controller.delete_get) // delete GET
 router.get('/thing/:id', thing_controller.detail) // detail GET
 router.get('/things', thing_controller.list) // list GET
 
+
 module.exports = router;
