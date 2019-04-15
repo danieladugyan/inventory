@@ -16,3 +16,16 @@ exports.locations = async (req, res) => {
     res.status(500).send(error);
   }
 }
+
+exports.search = async (req, res) => {
+  try {
+    location = await Location.findById(req.query.id);
+    if (location == null) {
+      res.status(404).send()
+    } else {
+      res.json(location);
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
